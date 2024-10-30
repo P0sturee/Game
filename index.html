@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo da Solidariedade</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f8ff; font-family: Arial, sans-serif; }
+    #gameArea { width: 100vw; height: 100vh; position: relative; overflow: hidden; background: #add8e6; }
+    .character { position: absolute; padding: 10px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s; }
+    .character:hover { transform: scale(1.1); }
+    .speech-bubble { position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%); background: #fff; padding: 5px 10px; border-radius: 5px; color: #333; font-size: 14px; }
+    #score { position: absolute; top: 10px; left: 10px; font-size: 24px; color: #333; }
+    #message { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 30px; color: #333; display: none; }
+  </style>
+</head>
+<body>
+
+  <div id="gameArea">
+    <div id="score">Pontos: 0</div>
+    <div id="message">Parabéns pela sua solidariedade!</div>
+  </div>
+
+  <script>
+    let score = 0;
+    const gameArea = document.getElementById('gameArea');
+    const scoreDisplay = document.getElementById('score');
+    const message = document.getElementById('message');
+
+    const needs = ["Ajude-me a atravessar", "Preciso de um abraço", "Poderia me dar um sorriso?", "Me ajude com as compras"];
+    
+    function createCharacter() {
+      const character = document.createElement('div');
+      character.classList.add('character');
+      character.style.left = Math.random() * 90 + 'vw';
+      character.style.top = Math.random() * 90 + 'vh';
+      character.onclick = () => {
+        score += 10;
+        updateScore();
+        gameArea.removeChild(character);
+      };
+
+      const speechBubble = document.createElement('div');
+      speechBubble.classList.add('speech-bubble');
+      speechBubble.innerText = needs[Math.floor(Math.random() * needs.length)];
+      character.appendChild(speechBubble);
+
+      gameArea.appendChild(character);
+
+      setTimeout(() => {
+        if (gameArea.contains(character)) gameArea.removeChild(character);
+      }, 3000);
+    }
+
+    function updateScore() {
+      scoreDisplay.innerText = 'Pontos: ' + score;
+      if (score >= 100) {
+        message.style.display = 'block';
+        setTimeout(() => message.style.display = 'none', 3000);
+        score = 0;
+      }
+    }
+
+    setInterval(createCharacter, 1500);
+  </script>
+</body>
+</html>
